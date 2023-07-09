@@ -1,0 +1,83 @@
+import { useReducer } from "react";
+
+const INCREMENT_COUNT = "increment";
+const DECREMENT_COUNT = "decrement";
+const READ_VALUE = "readValue";
+const SUBMIT_DATA = "submit";
+
+const reducer = (state, action) => {
+  if (action.type === INCREMENT_COUNT) {
+    return {
+      ...state,
+      count: state.count + 1,
+    };
+  }
+  if (action.type === DECREMENT_COUNT) {
+    return {
+      ...state,
+      count: state.count - 1,
+    };
+  }
+  if (action.type === READ_VALUE) {
+    return {
+      ...state,
+      input: action.payload,
+    };
+  }
+  if (action.type === SUBMIT_DATA) {
+    return {
+      ...state,
+      count: state.count + state.input,
+      input: 0,
+    };
+  }
+};
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, { count: 0, input: 0 });
+
+  const increment = () => {
+    dispatch({
+      type: INCREMENT_COUNT,
+    });
+  };
+
+  const decrement = () => {
+    dispatch({
+      type: DECREMENT_COUNT,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch({
+      type: SUBMIT_DATA,
+    });
+    // setCount(count + input);
+    // setInput(0);
+  };
+
+  const handleChange = (e) => {
+    const value = Number(e.target.value);
+    dispatch({
+      type: READ_VALUE,
+      payload: value,
+    });
+  };
+
+  return (
+    <>
+      <h1>{state.count}</h1>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="number"
+          onChange={handleChange}
+          value={state.input || ""}
+        />
+      </form>
+    </>
+  );
+};
+export default App;
